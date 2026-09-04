@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+model Customer {
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  password           String
+  firstName          String
+  lastName           String
+  bvn                String?  @unique
+  nin                String?  @unique
+  verificationStatus String   @default("PENDING")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  account            Account?
+  transactions       Transaction[]
+}
+
+model Account {
+  id            String   @id @default(cuid())
+  customerId    String   @unique
+  accountNumber String   @unique
+  accountName   String
+  balance       Float    @default(15000)
+  bankCode      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  customer      Customer @relation(fields: [customerId], references: [id])
+  transactions  Transaction[]
+}
+
+model Transaction {
+  id               String   @id @default(cuid())
+  customerId       String
+  accountId        String
+  senderAccount    String
+  recipientAccount String
+  recipientBank    String
+  amount           Float
+  type             String
+  reference        String   @unique
+  status           String   @default("PENDING")
+  description      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  customer         Customer @relation(fields: [customerId], references: [id])
+  account          Account  @relation(fields: [accountId], references: [id])
+}
