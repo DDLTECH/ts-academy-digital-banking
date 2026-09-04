@@ -6,7 +6,32 @@ This project was developed as part of the **TS Academy Backend Engineering Assig
 
 ---
 
-## 🚀 Project Overview
+## 🔗 Project Links
+
+### GitHub Repository
+
+https://github.com/DDLTECH/ts-academy-digital-banking
+
+### Live API
+
+https://ts-academy-digital-banking-1.onrender.com
+
+### API Health Check
+
+https://ts-academy-digital-banking-1.onrender.com/
+
+The live API should return:
+
+```json
+{
+  "success": true,
+  "message": "TS Academy Digital Banking API is running"
+}
+```
+
+---
+
+# 🚀 Project Overview
 
 The TS Academy Digital Banking System is a backend application designed to provide core digital banking functionalities.
 
@@ -52,19 +77,19 @@ The project was built to satisfy the following requirements:
 
 # 🛠️ Technology Stack
 
-| Technology           | Purpose                         |
-| -------------------- | ------------------------------- |
-| Node.js              | Backend runtime                 |
-| TypeScript           | Type-safe development           |
-| Express.js           | REST API framework              |
-| Prisma               | Database ORM                    |
-| SQLite               | Local database                  |
-| JWT                  | Authentication                  |
-| bcryptjs             | Password hashing                |
-| dotenv               | Environment variable management |
-| CORS                 | Cross-origin request handling   |
-| NIBSS By Phoenix API | KYC and banking operations      |
-| Postman              | API testing                     |
+| Technology           | Purpose                          |
+| -------------------- | -------------------------------- |
+| Node.js              | Backend runtime                  |
+| TypeScript           | Type-safe development            |
+| Express.js           | REST API framework               |
+| Prisma               | Database ORM                     |
+| SQLite               | Local database                   |
+| JWT                  | Authentication and authorization |
+| bcryptjs             | Password hashing                 |
+| dotenv               | Environment variable management  |
+| CORS                 | Cross-origin request handling    |
+| NIBSS By Phoenix API | KYC and banking operations       |
+| Postman              | API testing                      |
 
 ---
 
@@ -100,6 +125,9 @@ ts-academy-digital-banking/
 │   ├── services/
 │   │   └── nibss.service.ts
 │   │
+│   ├── utils/
+│   │   └── reset-test-password.ts
+│   │
 │   ├── app.ts
 │   └── server.ts
 │
@@ -107,12 +135,10 @@ ts-academy-digital-banking/
 │   ├── migrations/
 │   └── schema.prisma
 │
-├── docs/
-├── tests/
-│
 ├── .env.example
 ├── .gitignore
 ├── package.json
+├── package-lock.json
 ├── prisma.config.ts
 ├── tsconfig.json
 └── README.md
@@ -170,7 +196,7 @@ The BVN/NIN must contain exactly 11 digits.
 POST /api/customers/onboard
 ```
 
-## Example Request
+## Example Request — BVN
 
 ```json
 {
@@ -181,7 +207,7 @@ POST /api/customers/onboard
 }
 ```
 
-The same endpoint can be used with NIN:
+## Example Request — NIN
 
 ```json
 {
@@ -252,7 +278,7 @@ Every newly created account is pre-funded with:
 POST /api/accounts/create
 ```
 
-### Authentication
+## Authentication
 
 ```text
 Bearer Token Required
@@ -280,13 +306,13 @@ The system first checks the authenticated customer's identity and verifies that 
 GET /api/accounts/balance/:accountNumber
 ```
 
-### Example
+## Example
 
 ```http
 GET /api/accounts/balance/2073030844
 ```
 
-### Authentication
+## Authentication
 
 ```text
 Bearer Token Required
@@ -308,13 +334,13 @@ This allows the system to confirm the name associated with an account number bef
 GET /api/accounts/name-enquiry/:accountNumber
 ```
 
-### Example
+## Example
 
 ```http
 GET /api/accounts/name-enquiry/2074378891
 ```
 
-### Example Response
+## Example Response
 
 ```json
 {
@@ -358,13 +384,13 @@ The transfer process performs several validation steps before completing the tra
 POST /api/accounts/transfer
 ```
 
-### Authentication
+## Authentication
 
 ```text
 Bearer Token Required
 ```
 
-### Example Request
+## Example Request
 
 ```json
 {
@@ -375,7 +401,7 @@ Bearer Token Required
 }
 ```
 
-### Successful Transfer
+## Successful Transfer
 
 The system returns information including:
 
@@ -435,7 +461,7 @@ Customers can view their transaction history.
 GET /api/accounts/transactions
 ```
 
-### Authentication
+## Authentication
 
 ```text
 Bearer Token Required
@@ -447,7 +473,9 @@ It does **not** trust a customer ID supplied through the URL or query parameters
 
 This ensures that:
 
-> A customer can only view their own transaction history.
+```text
+A customer can only view their own transaction history.
+```
 
 For example, adding another customer's ID to the request does not expose that customer's transactions.
 
@@ -463,13 +491,13 @@ The system supports transaction status enquiries through NIBSS.
 GET /api/accounts/transaction/:transactionId
 ```
 
-### Example
+## Example
 
 ```http
 GET /api/accounts/transaction/TX1788548979812
 ```
 
-### Example Response
+## Example Response
 
 ```json
 {
@@ -492,6 +520,8 @@ PENDING
 SUCCESS
 FAILED
 ```
+
+The endpoint is protected by JWT authentication and checks that the requested transaction belongs to the authenticated customer.
 
 ---
 
@@ -558,7 +588,7 @@ The integration handles:
 * Fund transfers
 * Transaction status
 
-The NIBSS API credentials are loaded from the `.env` file.
+The NIBSS API credentials are loaded from environment variables.
 
 ---
 
@@ -673,7 +703,7 @@ This structure makes it possible to enforce the one-account-per-customer require
 ## 1. Clone the Repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/DDLTECH/ts-academy-digital-banking.git
 ```
 
 ## 2. Enter the Project Directory
@@ -698,10 +728,13 @@ Example:
 
 ```env
 PORT=5000
+
 DATABASE_URL="file:./dev.db"
 
 NIBSS_BASE_URL="https://nibssbyphoenix.onrender.com"
+
 NIBSS_API_KEY="your_nibss_api_key"
+
 NIBSS_API_SECRET="your_nibss_api_secret"
 
 JWT_SECRET="your_long_random_jwt_secret"
@@ -721,7 +754,7 @@ Run the Prisma migration:
 npx prisma migrate dev
 ```
 
-Generate the Prisma client:
+Generate the Prisma Client:
 
 ```bash
 npx prisma generate
@@ -763,24 +796,24 @@ The backend was tested using **Postman**.
 
 The following test scenarios were performed.
 
-### Customer Authentication
+## Customer Authentication
 
 * Successful customer login
 * Invalid login protection
 * JWT generation
 
-### Account Security
+## Account Security
 
 * Account creation without authentication rejected
 * Duplicate account creation rejected
 * Account ownership verified
 
-### Balance
+## Balance
 
 * Authenticated customer can view own balance
 * Customer cannot view another customer's balance
 
-### Transfers
+## Transfers
 
 * Successful transfer
 * Unauthorized sender account rejected
@@ -788,20 +821,22 @@ The following test scenarios were performed.
 * Recipient name enquiry performed
 * Transaction recorded after successful transfer
 
-### Transaction History
+## Transaction History
 
 * Authenticated customer can view own history
-* Attempt to supply another customer ID does not expose another customer's history
+* Attempt to access another customer's history is rejected
+* Customer identity is taken from JWT
 
-### Name Enquiry
+## Name Enquiry
 
 * Successful account name enquiry through NIBSS
 
-### Transaction Status
+## Transaction Status
 
 * Successful transaction status retrieval
+* Unauthorized transaction access rejected
 
-### Code Quality
+## Code Quality
 
 TypeScript compilation was tested using:
 
@@ -851,7 +886,7 @@ One of the important assignment requirements was ensuring that customers cannot 
 
 The transaction history endpoint was tested by attempting to provide another customer's ID.
 
-Instead of trusting the supplied ID, the backend used the customer ID contained inside the authenticated JWT.
+Instead of trusting a client-supplied ID, the backend uses the customer ID contained inside the authenticated JWT.
 
 Therefore:
 
@@ -859,7 +894,7 @@ Therefore:
 Authenticated Customer
         │
         ▼
-      JWT
+       JWT
         │
         ▼
 Customer ID from JWT
@@ -874,22 +909,22 @@ This prevents unauthorized access to another customer's transaction history.
 
 # 📋 API Endpoints
 
-| Method | Endpoint                                    | Authentication  | Purpose                     |
-| ------ | ------------------------------------------- | --------------- | --------------------------- |
-| POST   | `/api/customers/onboard`                    | No              | Customer onboarding         |
-| POST   | `/api/auth/login`                           | No              | Customer login              |
-| POST   | `/api/accounts/create`                      | Yes             | Create account              |
-| GET    | `/api/accounts/balance/:accountNumber`      | Yes             | Get account balance         |
-| GET    | `/api/accounts/name-enquiry/:accountNumber` | No              | Account name enquiry        |
-| POST   | `/api/accounts/transfer`                    | Yes             | Transfer funds              |
-| GET    | `/api/accounts/transactions`                | Yes             | Get own transaction history |
-| GET    | `/api/accounts/transaction/:transactionId`  | Yes/Recommended | Transaction status          |
+| Method | Endpoint                                    | Authentication | Purpose                     |
+| ------ | ------------------------------------------- | -------------- | --------------------------- |
+| POST   | `/api/customers/onboard`                    | No             | Customer onboarding         |
+| POST   | `/api/auth/login`                           | No             | Customer login              |
+| POST   | `/api/accounts/create`                      | Yes            | Create account              |
+| GET    | `/api/accounts/balance/:accountNumber`      | Yes            | Get account balance         |
+| GET    | `/api/accounts/name-enquiry/:accountNumber` | No             | Account name enquiry        |
+| POST   | `/api/accounts/transfer`                    | Yes            | Transfer funds              |
+| GET    | `/api/accounts/transactions`                | Yes            | Get own transaction history |
+| GET    | `/api/accounts/transaction/:transactionId`  | Yes            | Transaction status          |
 
 ---
 
-# 📌 API Base URL
+# 🌐 API Base URLs
 
-During local development:
+## Local Development
 
 ```text
 http://localhost:5000
@@ -901,7 +936,77 @@ Example:
 http://localhost:5000/api/auth/login
 ```
 
-After deployment, the local URL should be replaced with the deployed backend URL.
+## Production / Live API
+
+```text
+https://ts-academy-digital-banking-1.onrender.com
+```
+
+Example:
+
+```text
+https://ts-academy-digital-banking-1.onrender.com/api/auth/login
+```
+
+Health check:
+
+```text
+https://ts-academy-digital-banking-1.onrender.com/
+```
+
+---
+
+# 🚀 Deployment
+
+The backend has been deployed successfully using **Render**.
+
+## Production Configuration
+
+The deployed service uses:
+
+```text
+Runtime:
+Node.js
+
+Branch:
+main
+
+Build Command:
+npm install && npx prisma generate && npm run build
+
+Start Command:
+npm start
+```
+
+The required environment variables are configured securely on the hosting platform.
+
+The `.env` file is not uploaded to GitHub.
+
+## Live Deployment
+
+**Live API:**
+
+https://ts-academy-digital-banking-1.onrender.com
+
+**GitHub Repository:**
+
+https://github.com/DDLTECH/ts-academy-digital-banking
+
+---
+
+# ⚠️ Database Note
+
+The development version of the application uses SQLite.
+
+SQLite is suitable for this educational assignment and local development. However, for a production banking system, a persistent production-grade database such as PostgreSQL would be recommended.
+
+The application can also be improved to use:
+
+* PostgreSQL
+* Integer kobo-based monetary values
+* Database transaction locking
+* Persistent storage
+* Production-grade concurrency controls
 
 ---
 
@@ -926,44 +1031,33 @@ Although the system satisfies the assignment requirements, the following improve
 
 ---
 
-# 🚀 Deployment
-
-The backend can be deployed to platforms such as:
-
-* Render
-* Railway
-* Fly.io
-* Other Node.js-compatible hosting platforms
-
-For deployment, configure the required environment variables on the hosting platform rather than uploading the `.env` file.
-
----
-
 # 📄 Assignment Requirement Checklist
 
-| Requirement                   | Status     |
-| ----------------------------- | ---------- |
-| Customer onboarding           | ✅ Complete |
-| BVN verification              | ✅ Complete |
-| NIN verification              | ✅ Complete |
-| Customer authentication       | ✅ Complete |
-| JWT authorization             | ✅ Complete |
-| Account creation              | ✅ Complete |
-| One account per customer      | ✅ Complete |
-| ₦15,000 initial funding       | ✅ Complete |
-| Account balance               | ✅ Complete |
-| Name enquiry                  | ✅ Complete |
-| Intra-bank transfer           | ✅ Complete |
-| Inter-bank transfer           | ✅ Complete |
-| Transaction status            | ✅ Complete |
-| Transaction history           | ✅ Complete |
-| Customer transaction privacy  | ✅ Complete |
-| NIBSS API integration         | ✅ Complete |
-| Password hashing              | ✅ Complete |
-| Account ownership protection  | ✅ Complete |
-| Insufficient funds protection | ✅ Complete |
-| TypeScript compilation        | ✅ Passed   |
-| Production build              | ✅ Passed   |
+| Requirement                   | Status      |
+| ----------------------------- | ----------- |
+| Customer onboarding           | ✅ Complete  |
+| BVN verification              | ✅ Complete  |
+| NIN verification              | ✅ Complete  |
+| Customer authentication       | ✅ Complete  |
+| JWT authorization             | ✅ Complete  |
+| Account creation              | ✅ Complete  |
+| One account per customer      | ✅ Complete  |
+| ₦15,000 initial funding       | ✅ Complete  |
+| Account balance               | ✅ Complete  |
+| Name enquiry                  | ✅ Complete  |
+| Intra-bank transfer           | ✅ Complete  |
+| Inter-bank transfer           | ✅ Complete  |
+| Transaction status            | ✅ Complete  |
+| Transaction history           | ✅ Complete  |
+| Customer transaction privacy  | ✅ Complete  |
+| NIBSS API integration         | ✅ Complete  |
+| Password hashing              | ✅ Complete  |
+| Account ownership protection  | ✅ Complete  |
+| Insufficient funds protection | ✅ Complete  |
+| TypeScript compilation        | ✅ Passed    |
+| Production build              | ✅ Passed    |
+| GitHub repository             | ✅ Published |
+| Live API deployment           | ✅ Deployed  |
 
 ---
 
@@ -973,7 +1067,9 @@ For deployment, configure the required environment variables on the hosting plat
 
 **TS Academy Backend Engineering Assignment**
 
-Built with Node.js, TypeScript, Express.js, Prisma, SQLite, JWT and NIBSS By Phoenix APIs.
+Built with:
+
+**Node.js • TypeScript • Express.js • Prisma • SQLite • JWT • NIBSS By Phoenix APIs**
 
 ---
 
