@@ -4,7 +4,7 @@ import prisma from "./config/prisma";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 async function startServer() {
   try {
@@ -12,7 +12,7 @@ async function startServer() {
 
     console.log("Database connected successfully");
 
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Banking API running on port ${PORT}`);
     });
   } catch (error) {
