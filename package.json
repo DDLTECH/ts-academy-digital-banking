@@ -1,7 +1,7 @@
 {
   "name": "ts-academy-digital-banking",
   "version": "1.0.0",
-  "description": "",
+  "description": "TS Academy Digital Banking System",
   "main": "index.js",
   "directories": {
     "doc": "docs",
@@ -12,10 +12,10 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "echo \"Tests coming soon\"",
-    "postinstall": "prisma skills sync || exit 0"
+    "postinstall": "prisma generate"
   },
   "keywords": [],
-  "author": "",
+  "author": "DDL TECH",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
